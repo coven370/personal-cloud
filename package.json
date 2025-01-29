@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "personal-cloud",
   "private": true,
   "scripts": {
     "build": "turbo build",
