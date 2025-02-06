@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Login from '@/pages/LoginPage.vue'
+import CreateAccount from '@/pages/CreateAccount.vue'
 import Home from '@/pages/HomePage.vue';
 
 Vue.use(Router);
@@ -17,6 +18,11 @@ export default new Router({
             path: '/login',
             name: 'Login',
             component: Login
+        },
+        {
+            path: '/createAccount',
+            name: 'CreateAccount',
+            component: CreateAccount
         },
         {
             path: '/home',

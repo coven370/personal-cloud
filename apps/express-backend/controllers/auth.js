@@ -12,6 +12,7 @@ if (envFound.error) {
   throw new Error("⚠️  Couldn't find .env file  ⚠️");
 }
 const config = require('../config/config.json');
+const {Op} = require("sequelize");
 const env = config[process.env.ENV];
 
 module.exports = {
@@ -316,7 +317,10 @@ module.exports = {
     try {
       return users.findOne({
         where: {
-          username,
+          [Op.or]: [
+            { email: username },
+            { username }
+          ]
         },
       })
           .then((user) => {
@@ -333,8 +337,7 @@ module.exports = {
             console.log('In login: ', password);
             console.log('User login: ', user.password);
             // do local authentication first
-            //if (module.exports.comparePassword(password, user.password) === true) {
-            if (password === user.password) {
+            if (module.exports.comparePassword(password, user.password) === true) {
               const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: 86400});
               // return the information including token as JSON
               res.status(200).json({success: true, token: `JWT ${token}`, user});

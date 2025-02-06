@@ -2,6 +2,7 @@ const { users, auth_groups, scopes, auth_groups_users, ranks, completed_ranks, p
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv-safe');
 const nodemailer = require('nodemailer');
+const { Op } = require("sequelize");
 
 const envFound = dotenv.config();
 if (envFound.error) {
@@ -103,26 +104,49 @@ module.exports = {
       res.status(500).send({ success: false, message: 'Missing username' });
       return;
     }
-    if (!req.body.enabled) {
-      res.status(500).send({ success: false, message: 'Missing enabled flag' });
+    if (!req.body.email) {
+      res.status(500).send({ success: false, message: 'Missing email' });
       return;
     }
-    if (!req.body.first_name) {
+    if (!req.body.firstName) {
       res.status(500).send({ success: false, message: 'Missing first name' });
       return;
     }
-    if (!req.body.last_name) {
+    if (!req.body.lastName) {
       res.status(500).send({ success: false, message: 'Missing last name' });
       return;
     }
-    if (!req.body.id && !req.body.password) {
+    if (!req.body.password || req.body.password.length === 0) {
       res.status(500).send({ success: false, message: 'Missing password!' });
       return;
     }
+    const user = req.body
 
-    let group_id = 0;
+    return users.findAll({
+      where: {
+        [Op.or]: [
+          { email: user.email },
+          { username: user.username }
+        ]
+      }
+    })
+        .then(response => {
+          if (response.length > 0){
+            res.status(400).send({ success: false, message: 'Username or Email Already Exists!' })
+            return
+          }
+          user.password = bcrypt.hashSync(user.password, 10);
+          return users.create(user)
+              .then(response => {
+                res.status(200).send(response);
+              })
+              .catch((error) => {
+                console.log('Error: ' + error);
+                next(new DatabaseError('Critical error occurred while creating or updating user ', null, error));
+              });
+        })
 
-    if (req.body.id) {
+    /*if (req.body.id) {
       // this is an update
       const username = req.body;
       req.body.enabled = true;
@@ -187,7 +211,7 @@ module.exports = {
         // console.log('Error: ', error);
         next(new DatabaseError('A critical error occurred ', null, error));
       });
-    }
+    }*/
   },
 
   update(req, res, next) {

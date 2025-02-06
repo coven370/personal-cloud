@@ -1,7 +1,10 @@
 <template>
   <div>
     <h1>Login Page</h1>
+    <el-input type="text" v-model="username" placeholder="Username/Email"></el-input>
+    <el-input type="password" v-model="password" placeholder="Password"></el-input>
     <el-button @click="login" type="primary">Login</el-button>
+    <el-button @click="goToCreateAccount" type="primary">Create Account</el-button>
   </div>
 </template>
 
@@ -13,8 +16,8 @@ export default {
   name: "LoginPage",
   data(){
     return {
-      username: 'Test',
-      password: 'Test'
+      username: '',
+      password: '',
     }
   },
   methods: {
@@ -44,6 +47,11 @@ export default {
       this.$router.push({
         path: '/home'
       });
+    },
+    goToCreateAccount(){
+      this.$router.push({
+        path: '/createAccount'
+      })
     },
   }
 };

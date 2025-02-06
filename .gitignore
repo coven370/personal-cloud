@@ -2,10 +2,14 @@
 
 # Dependencies
 node_modules
+apps/vue-frontend/node_modules/
+apps/express-backend/node_modules/
 .pnp
 .pnp.js
 
 # Local env files
+apps/vue-frontend/.env
+apps/express-backend/.env
 .env
 .env.local
 .env.development.local
