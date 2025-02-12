@@ -3,6 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/apps/vue-frontend" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/personal-cloud" vcs="Git" />
   </component>
 </project>

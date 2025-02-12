@@ -1,0 +1,84 @@
+:root {
+    --red-color: #FA2C1A;
+    --green-color: #21fa1a;
+    --light-blue: #e8eeee;
+    --pastel-yellow: #fdfebc;
+    --metallic-blue: #667c85;
+    --steel-grey: #42474d;
+    --white: #e3f3ff
+}
+
+body{
+    background: var(--steel-grey);
+    font-family: 'Inter', sans-serif;
+}
+
+input{
+    border-radius: 5px;
+    background-color: var(--white);
+    border: none;
+}
+
+.see{
+    border: aqua 2px solid;
+}
+
+h1{
+    color: var(--light-blue);
+    font-size: 60px;
+}
+label{
+    color: var(--pastel-yellow);
+}
+
+.formInput{
+    width: 100%;
+    height: 45px;
+    font-weight: bold;
+}
+
+.hugeButton{
+    height: 80px;
+    width: 250px;
+    background-color: var(--metallic-blue);
+    color: var(--pastel-yellow);
+    border-radius: 40px;
+    border: none;
+    font-weight: bold;
+}
+.hugeButton:disabled{
+    opacity: 25%;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.outsideContainer{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.formContainer{
+    padding: 60px;
+}
+
+.inputContainer{
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.smallErrorText{
+    color: var(--red-color);
+    font-size: 12px;
+}
+
+.greenText{
+    color: var(--green-color);
+}
+.redText{
+    color: var(--red-color);
+}

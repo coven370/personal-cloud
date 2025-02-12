@@ -27,7 +27,7 @@ export class CommonAPIService {
   }
 
   // main login method for the code
-  login(login, router, store, errors) {
+  login(login, router, store, errors, jump = true) {
     axios.defaults.headers.common.Authorization = localStorage.getItem('jwtToken');
     return axios.post(`${this.api_url}/api/auth/login`, login)
       .then((response) => {
@@ -39,11 +39,13 @@ export class CommonAPIService {
       .catch((e) => {
         errors.push(e);
         if (e.response.status === 401) {
-          router.push({
-            path: '/login',
-          });
+          if (jump) {
+            router.push({
+              path: '/login',
+            });
+          }
         }
-        return {success: false, msg: 'Login Failure'};
+        return {success: false, msg: 'Invalid username and/or password. Please try again'};
       });
   }
 

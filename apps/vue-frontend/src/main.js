@@ -6,6 +6,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import { store } from "./store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
+import './assets/css/global.css';
 
 Vue.use(ElementUI);
 
