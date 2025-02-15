@@ -1,8 +1,8 @@
-Sky Vault
+# Sky Vault
 
 Sky Vault is a personal cloud storage application with encryption and file management features. It consists of a Vue 2 frontend and an Express backend, orchestrated using Turbo for streamlined development and deployment.
 
-Features
+# Features
 
 User Authentication: Login and registration functionality.
 
@@ -14,7 +14,7 @@ Storage Visualization: Displays storage usage progress.
 
 Recent Files Carousel: Highlights recently accessed files.
 
-Project Structure
+# Project Structure
 
 /personal-cloud
 ├── apps
@@ -24,9 +24,9 @@ Project Structure
 ├── package.json  # Monorepo dependencies
 └── README.md     # Project documentation
 
-Getting Started
+# Getting Started
 
-Prerequisites
+# Prerequisites
 
 Ensure you have the following installed:
 
@@ -34,9 +34,9 @@ Node.js (v14 or later)
 
 Turbo (for managing monorepo tasks)
 
-Installation
+# Installation
 
-Clone the repository and install dependencies:
+# Clone the repository and install dependencies:
 
 # Clone the repository
 git clone [https://github.com/your-repo/sky-vault.git](https://github.com/coven370/personal-cloud.git)
@@ -45,7 +45,7 @@ cd personal-cloud
 # Install dependencies
 npm install
 
-Running the Application
+# Running the Application
 
 Use Turbo to start both the frontend and backend simultaneously:
 
@@ -55,19 +55,19 @@ The Vue frontend runs on http://localhost:8080
 
 The Express backend runs on http://localhost:5000
 
-Backend API
+# Backend API
 
 The backend provides REST API endpoints for authentication and file operations. Modify backend/config.js to configure database and environment settings.
 
 Duplicate and rename .env.example to .env to create the necessary environment variables.
 
-Frontend Configuration
+# Frontend Configuration
 
 Ensure API routes are correctly set in frontend/config.js:
 
 Duplicate and rename .env.example to .env to create the necessary environment variables.
 
-Deployment
+# Deployment
 
 To build the frontend and backend:
 
