@@ -1,84 +1,80 @@
-# Turborepo starter
+Sky Vault
 
-This Turborepo starter is maintained by the Turborepo core team.
+Sky Vault is a personal cloud storage application with encryption and file management features. It consists of a Vue 2 frontend and an Express backend, orchestrated using Turbo for streamlined development and deployment.
 
-## Using this example
+Features
 
-Run the following command:
+User Authentication: Login and registration functionality.
 
-```sh
-npx create-turbo@latest
-```
+Dashboard Navigation: Sidebar for file management and encryption options.
 
-## What's inside?
+File Operations: Upload, download, encrypt, and share files(all currently incomplete).
 
-This Turborepo includes the following packages/apps:
+Storage Visualization: Displays storage usage progress.
 
-### Apps and Packages
+Recent Files Carousel: Highlights recently accessed files.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+Project Structure
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+/personal-cloud
+├── apps
+│   ├── vue-frontend  # Vue 2 application
+│   ├── express-backend   # Express server
+├── turbo.json    # Turbo configuration
+├── package.json  # Monorepo dependencies
+└── README.md     # Project documentation
 
-### Utilities
+Getting Started
 
-This Turborepo has some additional tools already setup for you:
+Prerequisites
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+Ensure you have the following installed:
 
-### Build
+Node.js (v14 or later)
 
-To build all apps and packages, run the following command:
+Turbo (for managing monorepo tasks)
 
-```
-cd my-turborepo
-pnpm build
-```
+Installation
 
-### Develop
+Clone the repository and install dependencies:
 
-To develop all apps and packages, run the following command:
+# Clone the repository
+git clone [https://github.com/your-repo/sky-vault.git](https://github.com/coven370/personal-cloud.git)
+cd personal-cloud
 
-```
-cd my-turborepo
-pnpm dev
-```
+# Install dependencies
+npm install
 
-### Remote Caching
+Running the Application
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+Use Turbo to start both the frontend and backend simultaneously:
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+npm run dev
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+The Vue frontend runs on http://localhost:8080
 
-```
-cd my-turborepo
-npx turbo login
-```
+The Express backend runs on http://localhost:5000
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Backend API
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+The backend provides REST API endpoints for authentication and file operations. Modify backend/config.js to configure database and environment settings.
 
-```
-npx turbo link
-```
+Duplicate and rename .env.example to .env to create the necessary environment variables.
 
-## Useful Links
+Frontend Configuration
 
-Learn more about the power of Turborepo:
+Ensure API routes are correctly set in frontend/config.js:
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Duplicate and rename .env.example to .env to create the necessary environment variables.
+
+Deployment
+
+To build the frontend and backend:
+
+npm run build
+
+Deploy using a hosting service of your choice (e.g., Vercel, AWS, or a private server).
+
+Contributing
+
+Contributions are welcome! Open an issue or submit a pull request with improvements.
