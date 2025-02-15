@@ -40,14 +40,14 @@ Turbo (for managing monorepo tasks)
 
 # Installation
 
-Clone the repository
+Clone the repository:
 
 git clone [https://github.com/your-repo/sky-vault.git](https://github.com/coven370/personal-cloud.git)
 
 cd personal-cloud
 
 
-Install dependencies
+Install dependencies:
 
 npm install
 
