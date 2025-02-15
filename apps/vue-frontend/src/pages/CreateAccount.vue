@@ -54,48 +54,6 @@
         <button class="hugeButton" :disabled="!validated" @click="submit">Sign up</button>
       </div>
     </div>
-
-<!--    <h1>Create Account</h1>
-    <input type="text" v-model="firstName" placeholder="First Name" @keyup="validateInputs">
-    <br>
-    <input type="text" v-model="lastName" placeholder="Last Name" @keyup="validateInputs">
-    <br>
-    <input type="text" v-model="email" placeholder="Email" @keyup="validateInputs">
-    <br>
-    <input type="text" v-model="username" placeholder="Username" @keyup="validateInputs">
-    <br>
-    <input type="password" v-model="password" placeholder="Password" @keyup="validateInputs">
-    <br>
-    <input type="password" v-model="confirmPassword" placeholder="Confirm Password" @keyup="validateInputs">
-    <br>
-    <el-button v-if="validated" @click="submit" type="primary">Submit</el-button>
-    <el-dialog
-        center
-        title="Error"
-        :visible.sync="modals.error"
-        :modalAppendToBody="false">
-      <div class="text-center">
-        <span>Error: {{ errorText }}</span>
-        <br>
-        <span slot="footer" class="dialog-footer">
-            <el-button type="danger" @click="closeModal('error')" icon="">OK</el-button>
-          </span>
-      </div>
-    </el-dialog>
-    <el-dialog
-        center
-        title="Success"
-        :visible.sync="modals.success"
-        :modalAppendToBody="false">
-      <div class="text-center">
-        <span>New user Successfully created</span>
-        <br>
-        <br>
-        <span slot="footer" class="dialog-footer">
-            <el-button type="success" @click="goToLogin" icon="">Go To Login</el-button>
-          </span>
-      </div>
-    </el-dialog>-->
   </div>
 </template>
 
