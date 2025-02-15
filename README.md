@@ -43,7 +43,9 @@ Turbo (for managing monorepo tasks)
 Clone the repository
 
 git clone [https://github.com/your-repo/sky-vault.git](https://github.com/coven370/personal-cloud.git)
+
 cd personal-cloud
+
 
 Install dependencies
 
