@@ -18,10 +18,15 @@ Recent Files Carousel: Highlights recently accessed files.
 
 /personal-cloud
 ├── apps
+
 │   ├── vue-frontend  # Vue 2 application
+
 │   ├── express-backend   # Express server
+
 ├── turbo.json    # Turbo configuration
+
 ├── package.json  # Monorepo dependencies
+
 └── README.md     # Project documentation
 
 # Getting Started
@@ -36,13 +41,13 @@ Turbo (for managing monorepo tasks)
 
 # Installation
 
-# Clone the repository and install dependencies:
+Clone the repository
 
-# Clone the repository
 git clone [https://github.com/your-repo/sky-vault.git](https://github.com/coven370/personal-cloud.git)
 cd personal-cloud
 
-# Install dependencies
+Install dependencies
+
 npm install
 
 # Running the Application
@@ -75,6 +80,6 @@ npm run build
 
 Deploy using a hosting service of your choice (e.g., Vercel, AWS, or a private server).
 
-Contributing
+# Contributing
 
 Contributions are welcome! Open an issue or submit a pull request with improvements.
