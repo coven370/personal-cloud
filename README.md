@@ -29,8 +29,6 @@ Recent Files Carousel: Highlights recently accessed files.
 
 └── README.md     # Project documentation
 
-# Getting Started
-
 # Prerequisites
 
 Ensure you have the following installed:
