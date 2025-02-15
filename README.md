@@ -17,6 +17,7 @@ Recent Files Carousel: Highlights recently accessed files.
 # Project Structure
 
 /personal-cloud
+
 ├── apps
 
 │   ├── vue-frontend  # Vue 2 application
