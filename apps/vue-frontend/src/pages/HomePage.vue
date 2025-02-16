@@ -74,6 +74,10 @@ export default {
   mounted(){
     this.getStoragePercentage()
     this.getRecentFiles()
+    window.addEventListener("keydown", this.handleKeydown);
+  },
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.handleKeydown);
   },
   methods: {
     getStoragePercentage(){
@@ -228,6 +232,16 @@ export default {
       }
 
       setTimeout(removeClasses, 500)
+    },
+    handleKeydown(event) {
+      switch (event.key) {
+        case "ArrowLeft":
+          this.cycleLeft();
+          break;
+        case "ArrowRight":
+          this.cycleRight();
+          break;
+      }
     },
     updateCards(index){
       let leftIndex = index - 1
