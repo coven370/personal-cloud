@@ -4,7 +4,6 @@ const authController = require(`${__dirname}/../controllers`).auth;
 const passport = require('passport');
 require('../config/passport')(passport);
 
-router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/reset', authController.resetPassword);
 router.post('/change', authController.changePassword);

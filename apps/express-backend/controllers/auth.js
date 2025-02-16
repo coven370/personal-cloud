@@ -49,48 +49,6 @@ module.exports = {
     });
   },
 
-  list(req, res) {
-    return users
-      .findAll({
-        attributes: [
-          'id',
-          'rank_id',
-          'username',
-          'first_name',
-          'last_name',
-          'phone',
-          'address1',
-          'address2',
-          'address3',
-          'city',
-          'state',
-          'zip',
-          'enabled',
-          'weight',
-          'current_outline',
-        ],
-        order: [
-          ['last_name', 'ASC'],
-        ],
-        where: {
-          enabled: true,
-        },
-      })
-      .then(rusers => res.status(200).json(rusers))
-      .catch((error) => {
-        res.status(400).send(error);
-      });
-  },
-
-  getUserTzTime(req, res) {
-    // first obtain the user ID
-    const user = users.findByPk(req.params.id, {
-      attributes: ['timezone'],
-    });
-
-    // take the time value passed in and convert it to the user's timezone
-  },
-
   changePassword(req, res) {
     if (!req.body.user_id) {
       res.status(200).send('No User ID');
@@ -184,89 +142,6 @@ module.exports = {
       // console.log('Error: ', error);
       res.status(500).send(error);
     });
-  },
-
-  getById(req, res) {
-    return users
-      .findByPk(req.params.id, {
-        attributes: [
-          'id',
-          'rank_id',
-          'username',
-          'first_name',
-          'last_name',
-          'phone',
-          'address1',
-          'address2',
-          'address3',
-          'city',
-          'state',
-          'zip',
-          'enabled',
-          'weight',
-          'current_outline',
-        ],
-        order: [
-          ['last_name', 'ASC'],
-        ],
-      })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).send({
-            message: 'users Not Found',
-          });
-        }
-
-        return res.status(200).send(user);
-      })
-      .catch(error => res.status(400).send(error));
-  },
-
-  add(req, res) {
-    return users
-      .create(req.body)
-      .then(user => res.status(201).send(user))
-      .catch(error => res.status(400).send(error));
-  },
-
-  search(req, res) {
-    // start by the filter
-    return users
-      .findAll({
-        attributes: [
-          'id',
-          'rank_id',
-          'username',
-          'first_name',
-          'last_name',
-          'phone',
-          'address1',
-          'address2',
-          'address3',
-          'city',
-          'state',
-          'zip',
-          'enabled',
-          'weight',
-          'current_outline',
-        ],
-        order: [
-          ['last_name', 'ASC'],
-        ],
-        where: {
-          $or: {
-            username: {
-              $like: `%${req.params.search}%`,
-            },
-          },
-        },
-      })
-      .then(rusers => res.status(200).json(rusers))
-      .catch(error => res.status(400).send(error));
-  },
-
-  register(req, res) {
-    return res.status(401).send('Call not implemented yet');
   },
 
   comparePassword(password, cb) {
