@@ -4,8 +4,11 @@
     --light-blue: #e8eeee;
     --pastel-yellow: #fdfebc;
     --metallic-blue: #667c85;
+    --soft-cyan: #dcfbfa;
     --steel-grey: #42474d;
-    --white: #e3f3ff
+    --dark-blue-grey: #4A6476;
+    --white: #e3f3ff;
+    --page-header-height: 90px;
 }
 
 body{
@@ -14,9 +17,10 @@ body{
 }
 
 input{
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: var(--white);
     border: none;
+    padding: 0 15px;
 }
 
 .see{
@@ -26,6 +30,23 @@ input{
 h1{
     color: var(--light-blue);
     font-size: 60px;
+}
+h3{
+    color: var(--pastel-yellow);
+    font-size: 28px;
+}
+h4{
+    color: var(--pastel-yellow);
+    font-size: 18px;
+}
+h5 {
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+}
+h1, h2, h3, h4, h5, h6{
+    padding: 0;
+    margin: 0;
 }
 label{
     color: var(--pastel-yellow);

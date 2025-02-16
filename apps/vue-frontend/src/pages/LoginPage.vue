@@ -2,9 +2,9 @@
   <div>
     <div class="row outsideContainer">
       <LoginImage></LoginImage>
-      <div class="col-sm-5 formContainer text-center">
+      <div class="col-sm-5 formContainer text-center" v-loading="loading">
         <br>
-        <h1>Welcome to your Personal Cloud</h1>
+        <h1>Welcome to your Sky Vault</h1>
         <label v-if="$route.params.newAccount">Successfully Registered!<br>Please login.</label>
         <label v-else style="color: transparent">.<br>.</label>
         <div class="inputContainer">
@@ -23,14 +23,6 @@
         <label class="top100">Don't have an account? <b class="clickable" @click="goToCreateAccount">Register</b></label>
       </div>
     </div>
-
-
-<!--    <h1>Login Page</h1>
-    <input type="text">
-    <el-input type="text" v-model="username" placeholder="Username/Email"></el-input>
-    <el-input type="password" v-model="password" placeholder="Password"></el-input>
-    <el-button @click="login" type="primary">Login</el-button>
-    <el-button @click="goToCreateAccount" type="primary">Create Account</el-button>-->
   </div>
 </template>
 
@@ -48,6 +40,7 @@ export default {
       username: '',
       password: '',
       errorTxt: '',
+      loading: false,
     }
   },
   mounted(){
@@ -61,24 +54,28 @@ export default {
         username: this.username,
         password: this.password
       };
+      this.loading = true
       return commonHandler.login(login, this.$router, this.$store, errors, false)
           .then(response => {
             if (response && response.success) {
               loggedIn = this.$store.getters.loggedIn;
               if (loggedIn){
+                this.loading = false
                 this.goToHome()
               }
             } else {
+              this.loading = false
               this.errorTxt = response.msg
             }
           })
           .catch(e => {
+            this.loading = false
             this.errorTxt = 'Error logging in: ' + e
           })
     },
     goToHome(){
       this.$router.push({
-        path: '/home'
+        path: '/dashboard/home'
       });
     },
     goToCreateAccount(){
