@@ -21,6 +21,7 @@ input{
     background-color: var(--white);
     border: none;
     padding: 0 15px;
+    outline: none;
 }
 
 .see{
@@ -102,4 +103,79 @@ label{
 }
 .redText{
     color: var(--red-color);
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+/* The track (background) of the scrollbar */
+::-webkit-scrollbar-track {
+    background: var(--steel-grey);
+    border-radius: 30px;
+}
+
+/* The draggable thumb of the scrollbar */
+::-webkit-scrollbar-thumb {
+    background-color: var(--metallic-blue);
+    border-radius: 30px;
+}
+
+/* Change thumb color on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--soft-cyan);
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--metallic-blue);
+    border-radius: 15px;
+}
+
+
+th{
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    color: var(--pastel-yellow);
+    background-color: var(--metallic-blue);
+    border: none;
+}
+td{
+    padding: 10px 15px;
+    font-size: 14px;
+    color: var(--soft-cyan);
+    background-color: var(--metallic-blue);
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px var(--steel-grey) solid;
+    border-right: 1px var(--steel-grey) solid;
+}
+
+th:first-child{
+    border-top-left-radius: 15px;
+}
+
+th:last-child{
+    border-top-right-radius: 15px;
+}
+
+.sectionHeader td {
+    padding: 0 15px;
+    font-size: 18px;
+    background-color: var(--dark-blue-grey);
+}
+
+.blankRow{
+    height: 20px !important;
+    background-color: var(--white) !important;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 15px;
+}
+tr:last-child td:last-child {
+    border-bottom-right-radius: 15px;
 }
