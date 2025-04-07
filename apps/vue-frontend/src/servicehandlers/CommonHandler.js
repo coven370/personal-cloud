@@ -54,7 +54,7 @@ export class CommonAPIService {
     const fullUrl = this.api_url + url;
     return axios.post(fullUrl, parameters)
       .then((response) => {
-        // console.debug('postCall response', response);
+        console.debug('postCall response', response);
         return response.data
       })
       .catch((error) => {

@@ -60,7 +60,7 @@
           <td></td>
           <td></td>
         </tr>
-        <tr v-for="file of filteredFiles.filter(data => data.group === 'favorite')" v-bind:key="file.id">
+        <tr v-for="file of filteredFiles.filter(data => data.group === 'favorite')" v-bind:key="file.id" class="fileTR">
           <td>{{file.displayName}}</td>
           <td>{{file.type}}</td>
           <td>{{file.displaySize}}</td>
@@ -83,7 +83,7 @@
           <td></td>
           <td></td>
         </tr>
-        <tr v-for="file of filteredFiles.filter(data => data.group === 'recent')" v-bind:key="file.id">
+        <tr v-for="file of filteredFiles.filter(data => data.group === 'recent')" v-bind:key="file.id" class="fileTR">
           <td>{{file.displayName}}</td>
           <td>{{file.type}}</td>
           <td>{{file.displaySize}}</td>
@@ -205,8 +205,8 @@ export default {
         let split = file.name.split('.')
         file.displayName = split[0]
         file.type = split[1].toUpperCase()
-        file.createdAt = new dayjs(file.createdAt)
-        file.updatedAt = new dayjs(file.updatedAt)
+        file.createdAt = dayjs(file.createdAt)
+        file.updatedAt = dayjs(file.updatedAt)
         file.displaySize = formatBytes(file.size)
       }
 

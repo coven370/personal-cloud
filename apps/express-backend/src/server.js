@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const { execSync } = require("child_process");
 const express = require("express");
 const path = require("path");
@@ -11,6 +12,8 @@ const multer = require("multer");
 const indexRouter = require("../routes");
 const usersRouter = require("../routes/users");
 const authRouter = require("../routes/auth");
+const filesRouter = require("../routes/files");
+const systemRouter = require("../routes/system");
 
 const handleErrors = require("../middleware/handleErrors");
 
@@ -104,6 +107,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/files", filesRouter);
+app.use("/api/system", systemRouter);
 
 // Catch 404 errors
 app.use((req, res, next) => {
