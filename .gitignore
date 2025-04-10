@@ -10,6 +10,8 @@ apps/express-backend/node_modules/
 # Local env files
 apps/vue-frontend/.env
 apps/express-backend/.env
+apps/express-backend/config/config.json
+apps/uploads
 .env
 .env.local
 .env.development.local
