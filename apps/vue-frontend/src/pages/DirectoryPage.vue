@@ -22,17 +22,17 @@
              currentFolder.contents.find(data => data.id === selectedItems[0]).systemType.name === 'File'">
           <i class="el-icon-download"></i>
         </button>
-        <DeleteModal
-            id="delete"
-            :items="currentFolder.contents.filter(data => selectedItems.includes(data.id))"
-            @confirm="deleteItems"
-        ></DeleteModal>
         <ShareModal
             id="share"
             :file="currentFolder.contents.find(data => data.id === selectedItems[0])"
             v-if="selectedItems.length === 1 &&
              currentFolder.contents.find(data => data.id === selectedItems[0]).systemType.name === 'File'"
         ></ShareModal>
+        <DeleteModal
+            id="delete"
+            :items="currentFolder.contents.filter(data => selectedItems.includes(data.id))"
+            @confirm="deleteItems"
+        ></DeleteModal>
       </div>
     </div>
     <table>

@@ -16,6 +16,10 @@
               @click="downloadFile">
             <i class="el-icon-download"></i>
           </button>
+          <ShareModal
+              id="share"
+              :file="file"
+          ></ShareModal>
           <DeleteModal
               id="delete"
               :items="[file]"
@@ -78,13 +82,14 @@
 import FileAPIService from "@/servicehandlers/FileServiceHandler";
 import DeleteModal from "@/components/DeleteModal.vue";
 import SystemServiceHandler from "@/servicehandlers/SystemServiceHandler";
+import ShareModal from "@/components/ShareModal.vue";
 
 const fileAPIService = new FileAPIService()
 const systemAPIService = new SystemServiceHandler()
 
 export default {
   name: 'FilePreview',
-  components: {DeleteModal},
+  components: {ShareModal, DeleteModal},
   data() {
     return {
       file: null,

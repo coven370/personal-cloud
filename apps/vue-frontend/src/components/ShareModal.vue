@@ -8,7 +8,7 @@
         <h3 class="modalTitle">Share {{file.name}}</h3>
         <div class="linkContainer" v-if="generatedLink">
           <h4 v-if="copied">Copied!</h4>
-          <h4 v-else>Link Created!</h4>
+          <h4 v-else>Link Created</h4>
           <i class="el-icon-copy-document customIcon" @click="copyToClipboard"></i>
           <i class="el-icon-search customIcon" @click="goToLink"></i>
         </div>
