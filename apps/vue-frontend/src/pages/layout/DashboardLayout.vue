@@ -17,17 +17,19 @@
       <div class="col-sm-10 contentContainer">
         <div class="header">
           <h3 class="headerText">
-            {{ tabs.find(data => data.name === $route.name).label }}
+            {{ tabs.find(data => data.name === $route.name)?.label }}
           </h3>
           <div class="convoContainer" id="convoContainer">
-            <div class="conversation" v-if="convoOpen">
-              <div v-for="(message, i) of messages" v-bind:key="i">
-                <h3 :class="message.from + 'Header'">
-                  {{message.from === 'ai' ? 'Vault AI' : 'You'}}
+            <div class="convoHeader" v-if="convoOpen">
+              <h2>Sky Vault AI</h2>
+              <button @click="clearConversation" class="basicButton" style="background-color: var(--steel-grey)">Clear</button>
+            </div>
+            <div class="conversation" v-show="convoOpen">
+              <div v-for="(message, i) of messages.filter(data => data.role !== 'system')" v-bind:key="i">
+                <h3 :class="message.role + 'Header'">
+                  {{message.role === 'assistant' ? 'Vault AI' : 'You'}}
                 </h3>
-                <div class="message" :class="message.from + 'Message'">
-                  {{message.message}}
-                </div>
+                <div class="message" :class="message.role + 'Message'" :id="i + 'message'"></div>
               </div>
             </div>
             <div class="searchContainer">
@@ -37,8 +39,12 @@
                   class="searchBar"
                   v-model="search"
                   @focus="openAIConvo"
+                  @keyup.enter="sendMessage"
               />
               <i class="el-icon-search searchIcon"></i>
+            </div>
+            <div class="loadingContainer" v-if="loading">
+              <i class="el-icon-loading"></i>
             </div>
           </div>
         </div>
@@ -51,6 +57,10 @@
 </template>
 
 <script>
+import { marked } from 'marked';
+import SystemServiceHandler from "@/servicehandlers/SystemServiceHandler";
+
+const systemAPIService = new SystemServiceHandler()
 export default {
   name: "DashboardLayout",
   data() {
@@ -72,26 +82,6 @@ export default {
           icon: "el-icon-monitor",
         },
         {
-          label: "Upload Files",
-          name: "Upload",
-          icon: "el-icon-top",
-        },
-        {
-          label: "Download Files",
-          name: "Download",
-          icon: "el-icon-bottom",
-        },
-        {
-          label: "Encrypt Files",
-          name: "Encrypt",
-          icon: "el-icon-unlock",
-        },
-        {
-          label: "Share Files",
-          name: "Share",
-          icon: "el-icon-share",
-        },
-        {
           label: "Manage Account",
           name: "ManageAccount",
           icon: "el-icon-setting",
@@ -99,41 +89,34 @@ export default {
       ],
       search: "",
       convoOpen: false,
-      messages: [
-        {
-          from: 'ai',
-          message: '1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-          from: 'user',
-          message: '2Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-          from: 'ai',
-          message: '3Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-          from: 'user',
-          message: '4Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-          from: 'ai',
-          message: '5Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-          from: 'user',
-          message: '6Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-      ],
+      messages: [],
+      loading: false,
     };
   },
   mounted() {
+    console.clear()
+    this.messages = this.$store.getters.conversation
+    console.log(this.messages)
     document.addEventListener("click", this.handleClickOutside);
+    this.$nextTick(() => {
+      for (let message of this.messages){
+        console.log(message.content, )
+        if (message.role === 'assistant') {
+          document.getElementById(this.messages.indexOf(message) - 1 + 'message').innerHTML = marked(message.content)
+        } else if (message.role === 'user') {
+          document.getElementById(this.messages.indexOf(message) - 1 + 'message').innerHTML = message.content
+        }
+      }
+    })
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleClickOutside);
   },
   methods: {
+    clearConversation(){
+      this.$store.dispatch('CLEAR_CONVERSATION')
+      this.messages = this.$store.getters.conversation
+    },
     goToPage(name, params) {
       if (this.$route.name !== name) {
         this.$router.push({
@@ -164,15 +147,96 @@ export default {
         convoContainer.style.backgroundColor = "";
         setTimeout(() => {this.convoOpen = false}, 450)
       }
+    },
+    sendMessage(){
+      console.log(this.messages)
+      if (this.search.length > 0){
+        this.messages.push({
+          role: 'user',
+          content: this.search
+        })
+
+        this.$nextTick(() => {
+          console.log(this.messages.length - 2 + 'message')
+          document.getElementById(this.messages.length - 2 + 'message').innerHTML = this.search;
+
+          this.search = ''
+          this.loading = true
+          return systemAPIService.sendMessage(this.messages, this.$router)
+              .then(response => {
+                this.loading = false
+                this.messages.push(response.message)
+
+                let fullText = response.message.content;
+
+                this.typeWriterEffect(response.message, fullText, 3000);
+                this.$store.dispatch('ADD_CONVERSATION', this.messages)
+              })
+              .catch(() => {
+                this.loading = false
+              })
+        })
+      }
+    },
+    typeWriterEffect(messageObj, fullText, duration = 3000) {
+      let currentIndex = 0;
+      const totalLetters = fullText.length;
+      const interval = duration / totalLetters;
+
+      messageObj.message = ''
+
+      const timer = setInterval(() => {
+        messageObj.message += fullText.charAt(currentIndex);
+
+        let div = document.getElementById(this.messages.length - 2 + 'message')
+
+        if (div){
+          div.innerHTML = marked(messageObj.message);
+        }
+
+        currentIndex++;
+
+        if (currentIndex >= totalLetters) {
+          clearInterval(timer);
+        }
+      }, interval);
     }
   },
 };
 </script>
 
 <style scoped>
+.loadingContainer{
+  position: absolute;
+  bottom: 75px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -webkit-transform: translate(-50%, 0);
+  color: var(--steel-grey);
+  background-color: var(--soft-cyan);
+  padding: 10px;
+  aspect-ratio: 1 / 1;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+.loadingContainer i {
+  font-size: 100px;
+  padding: 0;
+  margin: 0;
+}
+.convoHeader{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--page-header-height);
+  padding: 0 30px;
+}
 .fullContainer {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 .fullHeight {
   height: 100%;
@@ -195,6 +259,8 @@ export default {
   margin: 20px 30px;
   padding: 15px 25px;
   cursor: pointer;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 .tabIcon {
   font-size: 24px;
@@ -252,7 +318,7 @@ export default {
   pointer-events: none;
 }
 .convoContainer {
-  width: 40%;
+  width: 60%;
   height: calc(var(--page-header-height) - 40px);
   display: flex;
   flex-direction: column;
@@ -269,11 +335,11 @@ export default {
 }
 .conversation{
   width: 100%;
-  height: calc(100% - var(--page-header-height));
+  height: calc(100% - (var(--page-header-height) * 2) - 15px);
   margin: 20px 0;
   overflow-y: auto;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   padding: 15px;
   gap: 25px;
 }
@@ -284,7 +350,7 @@ export default {
   border-radius: 20px;
   width: 80%;
 }
-.aiMessage{
+.assistantMessage{
   background-color: var(--metallic-blue);
   margin-right: 20%;
 }
@@ -292,7 +358,7 @@ export default {
   background-color: var(--steel-grey);
   margin-left: 20%;
 }
-.aiHeader, .userHeader{
+.assistantHeader, .userHeader{
   padding: 5px 15px;
 }
 .userHeader{

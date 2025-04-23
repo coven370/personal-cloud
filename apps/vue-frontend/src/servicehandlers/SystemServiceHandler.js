@@ -29,6 +29,21 @@ export class FileAPIService {
     const url = `/api/system/items/`
     return this.CommonAPIService.postCall(url, ids, router)
   }
+
+  getRecentFiles(userId, router){
+    const url = `/api/system/recent/${userId}`
+    return this.CommonAPIService.getCall(url, null, router)
+  }
+
+  getItemByAddress(fileAddress, router){
+    const url = `/api/system/address/${fileAddress}`
+    return this.CommonAPIService.getCall(url, null, router)
+  }
+
+  sendMessage(convo, router){
+    const url = `/api/system/ai/message`
+    return this.CommonAPIService.postCall(url, convo, router)
+  }
 }
 
 export default FileAPIService;

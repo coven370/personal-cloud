@@ -10,6 +10,12 @@ export const store = new Vuex.Store({
     state: {
         user: null,
         loggedIn: false,
+        conversation: [
+            {
+                role: 'system',
+                content: 'You are an expert in encryption, files, and file systems.'
+            },
+        ]
     },
     actions: {
         ADD_USER({ commit }, user) {
@@ -23,6 +29,14 @@ export const store = new Vuex.Store({
         LOGOUT({ commit }) {
             commit('SET_LOGOUT');
         },
+
+        ADD_CONVERSATION({ commit }, convo){
+            commit('SET_CONVERSATION', convo)
+        },
+
+        CLEAR_CONVERSATION({ commit }){
+            commit('CLEAR_CONVERSATION')
+        }
     },
 
     mutations: {
@@ -40,10 +54,24 @@ export const store = new Vuex.Store({
             state.loggedIn = false;
             sessionStorage.clear();
         },
+
+        SET_CONVERSATION(state, convo){
+            state.conversation = convo
+        },
+
+        CLEAR_CONVERSATION(state){
+            state.conversation = [
+                {
+                    role: 'system',
+                    content: 'You are an expert in encryption, files, and file systems.'
+                },
+            ]
+        }
     },
 
     getters: {
         user: state => state.user,
         loggedIn: state => state.loggedIn,
+        conversation: state => state.conversation
     },
 });

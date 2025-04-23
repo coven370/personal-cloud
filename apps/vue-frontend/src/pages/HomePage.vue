@@ -8,7 +8,7 @@
             <div class="progressColors" id="progressColors"></div>
           </div>
           <div class="progressValue" id="progressValue">
-            <h4>{{displayPercentage.toFixed(0)}}%</h4>
+            <h4>{{formatBytes(storageSize)}} / {{formatBytes(maxSize)}} {{displayPercentage.toFixed(0)}}%</h4>
           </div>
         </div>
       </div>
@@ -25,17 +25,17 @@
           <div class="col-sm-10">
             <div class="row" id="cycleContainer">
               <div class="col-sm-4">
-                <div class="fileCard" id="leftFile">
+                <div class="fileCard" id="leftFile" @dblclick="goToFile(leftFile)">
                   <h5 class="fileName">{{leftFile.name}}</h5>
                 </div>
               </div>
               <div class="col-sm-4">
-                <div class="fileCard midFile" id="midFile">
+                <div class="fileCard midFile" id="midFile" @dblclick="goToFile(midFile)">
                   <h5 class="fileName">{{midFile.name}}</h5>
                 </div>
               </div>
               <div class="col-sm-4">
-                <div class="fileCard" id="rightFile">
+                <div class="fileCard" id="rightFile" @dblclick="goToFile(rightFile)">
                   <h5 class="fileName">{{rightFile.name}}</h5>
                 </div>
               </div>
@@ -58,11 +58,15 @@
 </template>
 
 <script>
+import SystemServiceHandler from "@/servicehandlers/SystemServiceHandler";
 
+const systemAPIService = new SystemServiceHandler()
 export default {
   name: "HomePage",
   data(){
     return {
+      storageSize: 0,
+      maxSize: 8589934592,
       storagePercentage: 0,
       displayPercentage: 0,
       recentFiles: [],
@@ -71,9 +75,9 @@ export default {
       rightFile: null,
     }
   },
-  mounted(){
+  async mounted(){
     this.getStoragePercentage()
-    this.getRecentFiles()
+    await this.getRecentFiles()
     window.addEventListener("keydown", this.handleKeydown);
   },
   beforeDestroy() {
@@ -81,16 +85,17 @@ export default {
   },
   methods: {
     getStoragePercentage(){
-      this.storagePercentage = getRandomFloat(0, 100)
-      this.$nextTick(() => {
-        setTimeout(this.updateDisplay, 1000)
-      })
-      function getRandomFloat(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+      return systemAPIService.getHomeDirectoryForUser(this.$store.getters.user.id, this.$router)
+          .then(response => {
+            this.storageSize = response.size
+            this.storagePercentage = this.storageSize / this.maxSize
+            this.$nextTick(() => {
+              setTimeout(this.updateDisplay, 1000)
+            })
+          })
     },
     getRecentFiles(){
-      this.recentFiles = [
+      /*this.recentFiles = [
         {
           id: 1,
           name: 'File 1',
@@ -131,10 +136,15 @@ export default {
           id: 10,
           name: 'File 10',
         },
-      ]
-      this.leftFile = this.recentFiles[this.recentFiles.length - 1]
-      this.midFile = this.recentFiles[0]
-      this.rightFile = this.recentFiles[1]
+      ]*/
+
+      return systemAPIService.getRecentFiles(this.$store.getters.user.id, this.$router)
+          .then(response => {
+            this.recentFiles = response
+            this.leftFile = this.recentFiles[this.recentFiles.length - 1]
+            this.midFile = this.recentFiles[0]
+            this.rightFile = this.recentFiles[1]
+          })
     },
     updateDisplay(){
       let storageBar = document.getElementById('storageBar')
@@ -164,7 +174,15 @@ export default {
           VO.displayPercentage = current
           let barLoc = barWidth * (current / 100);
           progressBar.style.width = `${barLoc}px`;
-          progressValue.style.left = `${barLoc - (progressValue.offsetWidth / 2)}px`;
+          let value = barLoc - (progressValue.offsetWidth / 2)
+          if (value <= progressValue.offsetWidth / 2){
+            progressValue.style.left = 0;
+          } else if (value > barWidth){
+            progressValue.style.left = `${barWidth - progressValue.offsetWidth}px`;
+          }
+          else {
+            progressValue.style.left = `${value}px`;
+          }
 
           if (progress < 1) {
             requestAnimationFrame(updateProgress);
@@ -257,7 +275,31 @@ export default {
       this.leftFile = this.recentFiles[leftIndex]
       this.midFile = this.recentFiles[index]
       this.rightFile = this.recentFiles[rightIndex]
-    }
+    },
+    goToFile(file){
+      this.$router.push({
+        name: 'FilePreview',
+        params: {
+          file,
+        }
+      })
+    },
+    formatBytes(sizeInBits) {
+      const sizeInBytes = sizeInBits / 8
+      const oneGB = 1024 ** 3;  // 1,073,741,824 bytes
+      const oneMB = 1024 ** 2;  // 1,048,576 bytes
+      const oneKB = 1024;       // 1,024 bytes
+
+      if (sizeInBytes >= oneGB) {
+        return (sizeInBytes / oneGB).toFixed(2) + " GB";
+      } else if (sizeInBytes >= oneMB) {
+        return (sizeInBytes / oneMB).toFixed(2) + " MB";
+      } else if (sizeInBytes >= oneKB) {
+        return (sizeInBytes / oneKB).toFixed(2) + " KB";
+      } else {
+        return sizeInBytes + " bytes";
+      }
+    },
   },
 };
 </script>
@@ -291,6 +333,7 @@ export default {
   z-index: 2;
   padding: 0;
   background-color: transparent;
+  white-space: nowrap;
 }
 .arrowButton{
   background-color: transparent;
@@ -312,6 +355,8 @@ export default {
   display: flex;
   align-items: center;
   justify-items: center;
+  cursor: pointer;
+  padding: 15px;
 }
 .fileName{
   text-align: center;
