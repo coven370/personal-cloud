@@ -1,7 +1,9 @@
 const { systemItems, systemTypes } = require('../models');
 
 const { DatabaseError, InvalidRoute, InvalidParams } = require('../utils/errors.js');
-const {Json} = require("sequelize/lib/utils");
+
+const { Ollama } = require('ollama');
+const ollama = new Ollama({ host: 'http://localhost:11434' });
 
 module.exports = {
   async getUserHomeFolder(req, res, next) {
@@ -154,4 +156,70 @@ module.exports = {
       next(new DatabaseError('Error while deleting items', null, e));
     }
   },
+  async recentFiles(req, res, next){
+    try {
+      console.log(req.params)
+      const {userId} = req.params
+      if (!userId){
+        return res.status(400).send('Missing userId')
+      }
+
+      let files = await systemItems.findAll({
+        where: {
+          userId,
+          systemTypeId: 2,
+        },
+        include: {
+          model: systemTypes,
+          required: true,
+        },
+        order: [
+          ['updatedAt', 'DESC']
+        ],
+        limit: 10
+      });
+
+      res.status(200).send(files)
+    } catch (e) {
+      console.log(e)
+      next(new DatabaseError('Error while deleting items', null, e));
+    }
+  },
+  async sendAIMessage(req, res, next){
+    try {
+      const conversation = req.body;
+      console.log(JSON.stringify(conversation, null, 2))
+      const response = await ollama.chat({
+        model: 'gemma3',
+        messages: conversation,
+      });
+      res.json(response);
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ error: err.message });
+    }
+  },
+  async getFileByAddress(req, res, next){
+    try {
+      const {fileAddress} = req.params
+      if (!fileAddress){
+        return res.status(400).send('Missing fileAddress')
+      }
+
+      const file = await systemItems.findOne({
+        where: {
+          fileAddress
+        },
+        include: {
+          model: systemTypes,
+          required: true,
+        }
+      })
+
+      res.status(200).send(file)
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ error: err.message });
+    }
+  }
 };

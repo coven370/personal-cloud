@@ -51,7 +51,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="sectionHeader">
+<!--        <tr class="sectionHeader">
           <td>
             Favorites
           </td>
@@ -73,7 +73,7 @@
           <td></td>
           <td></td>
           <td></td>
-        </tr>
+        </tr>-->
         <tr class="sectionHeader">
           <td>
             Recent
@@ -83,7 +83,12 @@
           <td></td>
           <td></td>
         </tr>
-        <tr v-for="file of filteredFiles.filter(data => data.group === 'recent')" v-bind:key="file.id" class="fileTR">
+        <tr v-for="file of filteredFiles.filter(data => data.group === 'recent')"
+            v-bind:key="file.id"
+            class="fileTR"
+            @dblclick="goToFile(file)"
+            style="cursor: pointer"
+        >
           <td>{{file.displayName}}</td>
           <td>{{file.type}}</td>
           <td>{{file.displaySize}}</td>
@@ -97,6 +102,9 @@
 
 <script>
 import dayjs from 'dayjs'
+import SystemServiceHandler from "@/servicehandlers/SystemServiceHandler";
+
+const systemAPIService = new SystemServiceHandler()
 export default {
   name: "MyFilesPage",
   data(){
@@ -111,14 +119,13 @@ export default {
       dateFormat: "YYYY-MM-DD HH:mm:ss",
     }
   },
-  mounted(){
+  async mounted(){
     console.clear()
-    this.getMyFiles()
+    await this.getMyFiles()
   },
   methods: {
     getMyFiles(){
-      let today = dayjs()
-      this.files = [
+      /*this.files = [
         {
           id: 1,
           name: 'Example File 1.mov',
@@ -199,20 +206,27 @@ export default {
           updatedAt: today.add(rand(-1, -50), 'day'),
           group: 'recent',
         },
-      ]
+      ]*/
 
-      for (let file of this.files) {
-        let split = file.name.split('.')
-        file.displayName = split[0]
-        file.type = split[1].toUpperCase()
-        file.createdAt = dayjs(file.createdAt)
-        file.updatedAt = dayjs(file.updatedAt)
-        file.displaySize = formatBytes(file.size)
-      }
+      return systemAPIService.getRecentFiles(this.$store.getters.user.id, this.$router)
+          .then(response => {
+            this.files = response
 
-      this.filteredFiles = this.files
+            for (let file of this.files) {
+              let split = file.name.split('.')
+              file.displayName = split[0]
+              file.type = split[1].toUpperCase()
+              file.displaySize = formatBytes(file.size)
+              file.createdAt = dayjs(file.createdAt)
+              file.updatedAt = dayjs(file.updatedAt)
+              file.group = 'recent'
+            }
 
-      function formatBytes(sizeInBytes) {
+            this.filteredFiles = this.files
+          })
+
+      function formatBytes(sizeInBits) {
+        const sizeInBytes = sizeInBits / 8
         const oneGB = 1024 ** 3;  // 1,073,741,824 bytes
         const oneMB = 1024 ** 2;  // 1,048,576 bytes
         const oneKB = 1024;       // 1,024 bytes
@@ -226,10 +240,6 @@ export default {
         } else {
           return sizeInBytes + " bytes";
         }
-      }
-
-      function rand(min, max) {
-        return Math.random() * (max - min) + min;
       }
     },
     filterFiles(type){
@@ -276,6 +286,14 @@ export default {
 
       }
     },
+    goToFile(file){
+      this.$router.push({
+        name: 'FilePreview',
+        params: {
+          file,
+        }
+      })
+    }
   },
 };
 </script>

@@ -12,6 +12,8 @@ import Download from "@/pages/DownloadPage.vue";
 import Encrypt from "@/pages/EncryptPage.vue";
 import Share from "@/pages/SharePage.vue";
 import ManageAccount from "@/pages/ManageAccount.vue";
+import FilePreview from "@/pages/FilePreview.vue"
+import SharedFile from "@/pages/SharedFile.vue";
 
 Vue.use(Router);
 
@@ -33,7 +35,13 @@ export default new Router({
             component: CreateAccount
         },
         {
+            path: '/sharedFile',
+            name: 'SharedFile',
+            component: SharedFile
+        },
+        {
             path: '/dashboard',
+            redirect: '/dashboard/home',
             component: DashboardLayout,
             children: [
                 {
@@ -75,6 +83,11 @@ export default new Router({
                     path: 'manageAccount',
                     name: 'ManageAccount',
                     component: ManageAccount
+                },
+                {
+                    path: 'filePreview',
+                    name: 'FilePreview',
+                    component: FilePreview
                 },
             ]
         },

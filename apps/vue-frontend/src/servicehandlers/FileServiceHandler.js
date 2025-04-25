@@ -15,6 +15,11 @@ export class FileAPIService {
     return this.CommonAPIService.fileCall(url, params, router);
   }
 
+  getFile(filename, router){
+    const url = `/api/files/${filename}`
+    return this.CommonAPIService.getCall(url, null, router)
+  }
+
   deleteFile(id, filename, router) {
     const url = `/api/claims/${id}/${filename}/delete`;
     return this.CommonAPIService.deleteCall(url, null, router);

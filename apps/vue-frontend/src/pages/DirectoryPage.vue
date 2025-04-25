@@ -22,6 +22,12 @@
              currentFolder.contents.find(data => data.id === selectedItems[0]).systemType.name === 'File'">
           <i class="el-icon-download"></i>
         </button>
+        <ShareModal
+            id="share"
+            :file="currentFolder.contents.find(data => data.id === selectedItems[0])"
+            v-if="selectedItems.length === 1 &&
+             currentFolder.contents.find(data => data.id === selectedItems[0]).systemType.name === 'File'"
+        ></ShareModal>
         <DeleteModal
             id="delete"
             :items="currentFolder.contents.filter(data => selectedItems.includes(data.id))"
@@ -117,6 +123,7 @@ import dayjs from "dayjs";
 import ToastNotifier from "@/components/ToastNotifier.vue";
 import UploadModal from "@/components/UploadModal.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
+import ShareModal from "@/components/ShareModal.vue";
 import SystemServiceHandler from "@/servicehandlers/SystemServiceHandler";
 import FileServiceHandler from "@/servicehandlers/FileServiceHandler";
 
@@ -128,6 +135,7 @@ export default {
     ToastNotifier,
     UploadModal,
     DeleteModal,
+    ShareModal,
   },
   data(){
     return {
@@ -221,10 +229,11 @@ export default {
 
       this.$forceUpdate()
     },
-    formatBytes(sizeInBytes) {
-      const oneGB = 1024 ** 3;
-      const oneMB = 1024 ** 2;
-      const oneKB = 1024;
+    formatBytes(sizeInBits) {
+      const sizeInBytes = sizeInBits / 8
+      const oneGB = 1024 ** 3;  // 1,073,741,824 bytes
+      const oneMB = 1024 ** 2;  // 1,048,576 bytes
+      const oneKB = 1024;       // 1,024 bytes
 
       if (sizeInBytes >= oneGB) {
         return (sizeInBytes / oneGB).toFixed(2) + " GB";
@@ -299,7 +308,12 @@ export default {
         this.selectFolder(item.id)
       }
       else if (item.systemType.name === 'File') {
-        alert('File Preview')
+        this.$router.push({
+          name: 'FilePreview',
+          params: {
+            file: item,
+          }
+        })
       }
     },
     navigateToParentFolder(){
@@ -317,12 +331,14 @@ export default {
       const folderEls = document.querySelectorAll('.folderTR');
       const fileEls = document.querySelectorAll('.fileTR');
       const deleteButton = document.getElementById('delete');
+      const shareButton = document.getElementById('share');
       const overlay = document.getElementById('overlay')
       const cancelButton = document.getElementById('cancelButton')
 
       const clickedInsideFolder = Array.from(folderEls).some(el => el.contains(event.target));
       const clickedInsideFile = Array.from(fileEls).some(el => el.contains(event.target));
       const clickedInsideDelete = deleteButton ? deleteButton.contains(event.target) : false;
+      const clickedInsideShare = shareButton ? shareButton.contains(event.target) : false;
       const clickedInsideOverlay = overlay ? overlay.contains(event.target) : false;
       const clickedInsideCancel = cancelButton ? cancelButton.contains(event.target) : false;
 
@@ -331,6 +347,7 @@ export default {
           !clickedInsideFolder &&
           !clickedInsideFile &&
           !clickedInsideDelete &&
+          !clickedInsideShare &&
           !clickedInsideOverlay &&
           !clickedInsideCancel
       ) {

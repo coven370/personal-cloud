@@ -4,6 +4,7 @@ const { users, systemItems } = require('../models');
 
 const path = require('path');
 const fs = require('fs');
+const mime= require('mime-types')
 
 module.exports = {
     downloadFile(req, res, next) {
@@ -86,8 +87,32 @@ module.exports = {
             console.error(e);
             next(new DatabaseError('Error while processing file upload', null, e));
         }
-    }
+    },
+    getFile(req, res, next) {
+        try {
+            const filename   = req.params.filename;
+            const uploadsDir = path.join(__dirname, '../../uploads');
+            const filePath   = path.join(uploadsDir, filename);
 
+            if (!fs.existsSync(filePath)) {
+                return res.status(404).send('File not found');
+            }
+
+            // lookup() returns a MIME string or false
+            const type = mime.lookup(filePath) || 'application/octet-stream';
+            res.setHeader('Content-Type', type);
+
+            res.sendFile(filePath, err => {
+                if (err) {
+                    console.error('Error sending file:', err);
+                    next(err);
+                }
+            });
+        } catch (e) {
+            console.error(e);
+            next(new DatabaseError('Error while processing file upload', null, e));
+        }
+    },
 };
 
 async function updateFolderSize(parentFolderId, size){

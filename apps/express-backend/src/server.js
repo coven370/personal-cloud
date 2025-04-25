@@ -18,6 +18,9 @@ const systemRouter = require("../routes/system");
 const handleErrors = require("../middleware/handleErrors");
 
 const PORT = process.env.PORT || 3000;
+
+const UPLOAD_DIR = path.join(__dirname, '../../uploads');
+
 const app = express();
 
 // **🔹 Function to Kill Any Process Using the Port**
@@ -53,13 +56,12 @@ app.use(cors());
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads/");
+        cb(null, UPLOAD_DIR);
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
-        const baseName = path.basename(file.originalname, ext);
-        const timestamp = Date.now();
-        cb(null, `${baseName}-${timestamp}${ext}`);
+        const base = path.basename(file.originalname, ext);
+        cb(null, `${base}-${Date.now()}${ext}`);
     }
 });
 
@@ -90,7 +92,13 @@ process.on("SIGHUP", shutdown);  // Terminal closed
 
 // Middleware setup
 app.use(fileUpload({ createParentPath: true, useTempFiles: true, tempFileDir: "/tmp" }));
-app.use("/downloads", express.static("public/uploads"));
+app.use("/downloads", express.static("public/uploads"));// serve exactly the same folder Multer writes into:
+app.use(
+    '/uploads',
+    express.static(UPLOAD_DIR)
+);
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
